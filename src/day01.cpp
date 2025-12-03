@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include "utils.hpp"
+#include "../include/utils.hpp"
 
 int part1(const std::vector<std::string>& lines) {
 	int dial = 50;

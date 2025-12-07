@@ -13,7 +13,7 @@ inline std::vector<std::string> read_lines(std::ifstream& file) {
     std::vector<std::string> lines;
     std::string line;
     while (std::getline(file, line)) {
-        if (!line.empty()) lines.push_back(line);
+        lines.push_back(line);
     }
     return lines;
 }

@@ -1,0 +1,81 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+#include "../include/utils.hpp"
+
+using namespace std;
+using ll = long long;
+
+vector<vector<string>> constructArray(const vector<string>& lines) {
+    vector<vector<string>> arr;
+    arr.reserve(lines.size());
+
+    for (const string& line : lines) {
+        vector<string> row;
+        string token;
+        for (char c : line) {
+            if (c != ' ') {
+                token += c;
+            } else if (!token.empty()) {
+                row.push_back(token);
+                token.clear();
+            }
+        }
+
+        if (!token.empty()) {
+            row.push_back(token);
+        }
+
+        arr.push_back(row);
+    }
+
+    return arr;
+}
+
+ll part1(const vector<string>& lines) {
+	ll total = 0;
+	vector<vector<string>> arr = constructArray(lines);
+
+	vector<vector<string>> transposed(arr[0].size(), vector<string>(arr.size()));
+
+	for (int i = 0; i < arr.size(); i++) {
+		for (int j = 0; j < arr[0].size(); j++) {
+			transposed[j][i] = arr[i][j];
+		}
+	}
+
+	for (auto& row : transposed) {
+		ll cur_sum = 0;
+		char op = row.back()[0];
+
+		if (op == '*') {
+			cur_sum = 1;
+			for (int i = 0; i < row.size() - 1; i++) {
+				cur_sum *= stoll(row[i]);
+			}
+		}
+		else {
+			for (int i = 0; i < row.size() - 1; i++) {
+				cur_sum += stoll(row[i]);
+			}
+		}
+		total += cur_sum;
+	}
+
+	return total;
+}
+
+// need to fix something with the constructArray since the columns are all difference in the text file
+ll part2(const vector<string>& lines) {
+	return 0;
+}
+
+
+int main() {
+	ifstream input("inputs/day06.txt");
+	vector<string> lines = aoc::read_lines(input);
+
+	cout << "Part 1: " << part1(lines) << "\n";
+	cout << "Part 2: " << part2(lines) << "\n";
+}

@@ -66,9 +66,79 @@ ll part1(const vector<string>& lines) {
 	return total;
 }
 
-// need to fix something with the constructArray since the columns are all difference in the text file
 ll part2(const vector<string>& lines) {
-	return 0;
+    int rows = lines.size();
+    int cols = 0;
+
+    for (auto &s : lines)
+        cols = max(cols, (int)s.size());
+
+    vector<string> rotated;
+
+    for (int c = cols - 1; c >= 0; c--) {
+        string newRow;
+        for (int r = 0; r < rows; r++) {
+            if (c < (int)lines[r].size())
+                newRow.push_back(lines[r][c]);
+        }
+        rotated.push_back(newRow);
+    }
+
+    vector<vector<string>> nums;
+    nums.push_back({});
+
+    for (auto &row : rotated) {
+        bool isEmpty = true;
+        for (char ch : row)
+            if (ch != ' ') { isEmpty = false; break; }
+        if (isEmpty) {
+            nums.push_back({});
+            continue;
+        }
+
+        stringstream ss(row);
+        string token;
+        while (ss >> token) {
+            nums.back().push_back(token);
+        }
+    }
+
+	ll total = 0;
+
+	for (int i = 0; i < nums.size(); i++) {
+		if (nums[i].empty()) continue;
+
+		ll cur_total = 0;
+		string &lastVal = nums[i].back();
+		char op = lastVal.back();
+		if (op == '*') cur_total = 1;
+
+		for (auto &val : nums[i]) {
+			string s = val;
+
+			while (!s.empty() && !isdigit(s.back()))
+				s.pop_back();
+
+			int start = 0;
+			while (start < s.size() && !isdigit(s[start]))
+				start++;
+			s = s.substr(start);
+
+			if (s.empty()) continue;
+
+			ll num = stoll(s);
+
+			if (op == '+') {
+				cur_total += num;
+			} else if (op == '*') {
+				cur_total *= num;
+			}
+		}
+
+		total += cur_total;
+	}
+
+    return total;
 }
 
 

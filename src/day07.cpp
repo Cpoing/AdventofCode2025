@@ -56,8 +56,50 @@ ll part1(const vector<string>& lines) {
 	return result;
 }
 
+ll traverse2(int row, int col, const vector<vector<char>>& arr, vector<vector<ll>>& memo) {
+    int n = arr.size();
+    int m = arr[0].size();
+
+    if (row >= n)
+        return 1;
+
+    if (col < 0 || col >= m)
+        return 0;
+
+    if (memo[row][col] != -1)
+        return memo[row][col];
+
+    ll result;
+
+    if (arr[row][col] == '.') {
+        result = traverse2(row + 1, col, arr, memo);
+    } 
+    else if (arr[row][col] == '^') {
+        result = traverse2(row + 1, col - 1, arr, memo)
+               + traverse2(row + 1, col + 1, arr, memo);
+    }
+    else {
+        result = 0;
+    }
+
+    memo[row][col] = result;
+    return result;
+}
+
 ll part2(const vector<string>& lines) {
-	return 0;
+    vector<vector<char>> arr = constructArray(lines);
+
+    int start = 0;
+    for (int i = 0; i < arr[0].size(); i++) {
+        if (arr[0][i] == 'S') {
+            start = i;
+            break;
+        }
+    }
+
+    vector<vector<ll>> memo(arr.size(), vector<ll>(arr[0].size(), -1));
+
+    return traverse2(1, start, arr, memo);
 }
 
 
